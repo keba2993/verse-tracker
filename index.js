@@ -6,6 +6,7 @@ import {
 	push,
 	onValue,
 	remove,
+	child,
 } from 'https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js';
 
 // Your web app's Firebase configuration
@@ -23,15 +24,26 @@ const inputBtn = document.getElementById('input-btn');
 const ulEl = document.getElementById('ul-el');
 const deleteBtn = document.getElementById('delete-btn');
 
-const getVerseLink = (v) => {
-	const [book, parts] = v.split(' ');
-	const [chapter, verse] = parts.split(':');
+const deleteVerse = (verse) => {
+	console.log(dbRef);
+};
 
-	const shortBook = Object.keys(bookAbbreviations).find(
-		(key) => bookAbbreviations[key] === book
+const getVerseLink = (v) => {
+	const [rest, verses] = v.split(':');
+
+	const restArr = rest.split(' ');
+	const chapter = restArr[restArr.length - 1];
+	const book = restArr.slice(0, -1).join('');
+
+	let shortBook = Object.keys(bookAbbreviations).find(
+		(key) => bookAbbreviations[key] === book.toLowerCase()
 	);
 
-	const blbUrl = `https://www.blueletterbible.org/niv/${shortBook}/${chapter}/${verse}/`;
+	if (!shortBook) {
+		shortBook = book.substr(0, 3);
+	}
+
+	const blbUrl = `https://www.blueletterbible.org/niv/${shortBook}/${chapter}/${verses}/`;
 
 	return blbUrl;
 };
@@ -44,6 +56,7 @@ function render(verses) {
         <a target='_blank' href='${getVerseLink(verses[i])}'>
           ${verses[i]}
         </a>
+        <button class='rmv-btn' id='${verses[i]}'>&#10006;</button>
       </li>
     `;
 	}
@@ -54,6 +67,14 @@ onValue(dbRef, (snapshot) => {
 	if (snapshot.exists()) {
 		const verses = Object.values(snapshot.val());
 		render(verses);
+	}
+});
+
+document.addEventListener('click', (e) => {
+	const target = e.target.closest('.rmv-btn');
+
+	if (target) {
+		deleteVerse(target.getAttribute('id'));
 	}
 });
 

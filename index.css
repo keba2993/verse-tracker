@@ -3,7 +3,7 @@ body {
 	padding: 10px;
 	font-family: Arial, Helvetica, sans-serif;
 	max-width: 302px;
-	background-color: lightgray;
+	background-color: white;
 }
 
 label {
@@ -34,9 +34,22 @@ button {
 	width: 48%;
 }
 
+button:hover {
+	opacity: 60%;
+}
+
+.rmv-btn {
+	background: white;
+	color: tomato;
+	border-radius: 5px;
+	width: min-content;
+	height: min-content;
+	padding: 4px 8px;
+}
+
 #delete-btn {
 	background: white;
-	color: #5f9341;
+	color: tomato;
 }
 
 ul {
@@ -47,6 +60,9 @@ ul {
 
 li {
 	margin-top: 5px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
 }
 
 a {
