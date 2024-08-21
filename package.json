@@ -1,0 +1,14 @@
+{
+	"name": "verse-tracker",
+	"description": "",
+	"scripts": {
+		"start": "vite",
+		"dev": "vite",
+		"build": "vite build",
+		"preview": "vite preview"
+	},
+	"dependencies": {
+		"dotenv": "^16.4.5",
+		"vite": "latest"
+	}
+}
