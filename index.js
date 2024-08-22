@@ -85,8 +85,10 @@ document.addEventListener('click', (e) => {
 	}
 });
 
-deleteBtn.addEventListener('dblclick', function () {
-	remove(dbRef);
+deleteBtn.addEventListener('click', function () {
+	if (confirm('Are you sure you want to delete all verses?')) {
+		remove(dbRef);
+	}
 });
 
 inputBtn.addEventListener('click', function () {
