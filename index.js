@@ -6,7 +6,6 @@ import {
 	push,
 	onValue,
 	remove,
-	child,
 } from 'https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js';
 
 // Your web app's Firebase configuration
@@ -24,8 +23,15 @@ const inputBtn = document.getElementById('input-btn');
 const ulEl = document.getElementById('ul-el');
 const deleteBtn = document.getElementById('delete-btn');
 
-const deleteVerse = (verse) => {
-	console.log(dbRef);
+const deleteVerse = (verseKey) => {
+	const verseRef = ref(db, `verses/${verseKey}`);
+	remove(verseRef)
+		.then(() => {
+			console.log(`Verse with key ${verseKey} deleted successfully.`);
+		})
+		.catch((error) => {
+			console.error(`Failed to delete verse with key ${verseKey}:`, error);
+		});
 };
 
 const getVerseLink = (v) => {
@@ -50,13 +56,13 @@ const getVerseLink = (v) => {
 
 function render(verses) {
 	let listItems = '';
-	for (let i = 0; i < verses.length; i++) {
+	for (let key in verses) {
 		listItems += `
       <li>
-        <a target='_blank' href='${getVerseLink(verses[i])}'>
-          ${verses[i]}
+        <a target='_blank' href='${getVerseLink(verses[key])}'>
+          ${verses[key]}
         </a>
-        <button class='rmv-btn' id='${verses[i]}'>&#10006;</button>
+        <button class='rmv-btn' id='${key}'>&#10006;</button>
       </li>
     `;
 	}
@@ -65,8 +71,9 @@ function render(verses) {
 
 onValue(dbRef, (snapshot) => {
 	if (snapshot.exists()) {
-		const verses = Object.values(snapshot.val());
-		render(verses);
+		render(snapshot.val());
+	} else {
+		ulEl.innerHTML = '';
 	}
 });
 
@@ -80,7 +87,6 @@ document.addEventListener('click', (e) => {
 
 deleteBtn.addEventListener('dblclick', function () {
 	remove(dbRef);
-	ulEl.innerHTML = '';
 });
 
 inputBtn.addEventListener('click', function () {
